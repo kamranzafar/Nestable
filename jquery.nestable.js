@@ -93,6 +93,7 @@
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
+
                 if (!handle.length || list.dragEl) {
                     return;
                 }
@@ -290,6 +291,10 @@
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
+            if(!this.moving && this.options.click){
+                this.options.click(el);
+            }
+
             this.dragEl.remove();
             this.el.trigger('change');
             if (this.hasNewRoot) {
@@ -333,6 +338,8 @@
                 mouse.moving = true;
                 return;
             }
+
+            this.moving = true;
 
             // calc distance moved on this axis (and direction)
             if (mouse.dirAx !== newAx) {
