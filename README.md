@@ -88,6 +88,9 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 10th Feburary 2016
+* Added item click callback (@kamranzafar)
+
 ### 15th October 2012
 
 * Merge for Zepto.js support
