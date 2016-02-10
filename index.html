@@ -1,185 +1,307 @@
-<!doctype html>
-<html>
-  <head>
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html lang="en" class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html lang="en" class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html lang="en" class="lt-ie9"> <![endif]-->
+<!--[if IE 9]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if gt IE 9]><!--> <html lang="en"> <!--<![endif]-->
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Nestable by kamranzafar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>Nestable</title>
+    <style type="text/css">
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>Nestable</h1>
-        <p>Drag &amp; drop hierarchical list with mouse and touch compatibility (jQuery plugin)</p>
+.cf:after { visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }
+* html .cf { zoom: 1; }
+*:first-child+html .cf { zoom: 1; }
 
-        <p class="view"><a href="https://github.com/kamranzafar/Nestable">View the Project on GitHub <small>kamranzafar/Nestable</small></a></p>
+html { margin: 0; padding: 0; }
+body { font-size: 100%; margin: 0; padding: 1.75em; font-family: 'Helvetica Neue', Arial, sans-serif; }
 
+h1 { font-size: 1.75em; margin: 0 0 0.6em 0; }
 
-        <ul>
-          <li><a href="https://github.com/kamranzafar/Nestable/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/kamranzafar/Nestable/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/kamranzafar/Nestable">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>
-<a id="nestable" class="anchor" href="#nestable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Nestable</h1>
+a { color: #2996cc; }
+a:hover { text-decoration: none; }
 
-<h2>
-<a id="please-note" class="anchor" href="#please-note" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PLEASE NOTE</h2>
+p { line-height: 1.5em; }
+.small { color: #666; font-size: 0.875em; }
+.large { font-size: 1.25em; }
 
-<p><strong>I cannot provide any support or guidance beyond this README. If this code helps you that's great but I have no plans to develop Nestable beyond this demo (it's not a final product and has limited functionality). I cannot reply to any requests for help.</strong></p>
+/**
+ * Nestable
+ */
 
-<hr>
+.dd { position: relative; display: block; margin: 0; padding: 0; max-width: 600px; list-style: none; font-size: 13px; line-height: 20px; }
 
-<h3>
-<a id="drag--drop-hierarchical-list-with-mouse-and-touch-compatibility-jquery--zepto-plugin" class="anchor" href="#drag--drop-hierarchical-list-with-mouse-and-touch-compatibility-jquery--zepto-plugin" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Drag &amp; drop hierarchical list with mouse and touch compatibility (jQuery / Zepto plugin)</h3>
+.dd-list { display: block; position: relative; margin: 0; padding: 0; list-style: none; }
+.dd-list .dd-list { padding-left: 30px; }
+.dd-collapsed .dd-list { display: none; }
 
-<p><a href="http://dbushell.github.com/Nestable/"><strong>Try Nestable Demo</strong></a></p>
+.dd-item,
+.dd-empty,
+.dd-placeholder { display: block; position: relative; margin: 0; padding: 0; min-height: 20px; font-size: 13px; line-height: 20px; }
 
-<p>Nestable is an experimental example and not under active development. If it suits your requirements feel free to expand upon it!</p>
+.dd-handle { display: block; height: 30px; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+    background: #fafafa;
+    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
+    box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.dd-handle:hover { color: #2ea8e5; background: #fff; }
 
-<h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+.dd-item > button { display: block; position: relative; cursor: pointer; float: left; width: 25px; height: 20px; margin: 5px 0; padding: 0; text-indent: 100%; white-space: nowrap; overflow: hidden; border: 0; background: transparent; font-size: 12px; line-height: 1; text-align: center; font-weight: bold; }
+.dd-item > button:before { content: '+'; display: block; position: absolute; width: 100%; text-align: center; text-indent: 0; }
+.dd-item > button[data-action="collapse"]:before { content: '-'; }
 
-<p>Write your nested HTML lists like so:</p>
+.dd-placeholder,
+.dd-empty { margin: 5px 0; padding: 0; min-height: 30px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
+.dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5;
+    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:         linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                              linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+}
 
-<pre><code>&lt;div class="dd"&gt;
-    &lt;ol class="dd-list"&gt;
-        &lt;li class="dd-item" data-id="1"&gt;
-            &lt;div class="dd-handle"&gt;Item 1&lt;/div&gt;
-        &lt;/li&gt;
-        &lt;li class="dd-item" data-id="2"&gt;
-            &lt;div class="dd-handle"&gt;Item 2&lt;/div&gt;
-        &lt;/li&gt;
-        &lt;li class="dd-item" data-id="3"&gt;
-            &lt;div class="dd-handle"&gt;Item 3&lt;/div&gt;
-            &lt;ol class="dd-list"&gt;
-                &lt;li class="dd-item" data-id="4"&gt;
-                    &lt;div class="dd-handle"&gt;Item 4&lt;/div&gt;
-                &lt;/li&gt;
-                &lt;li class="dd-item" data-id="5"&gt;
-                    &lt;div class="dd-handle"&gt;Item 5&lt;/div&gt;
-                &lt;/li&gt;
-            &lt;/ol&gt;
-        &lt;/li&gt;
-    &lt;/ol&gt;
-&lt;/div&gt;
-</code></pre>
+.dd-dragel { position: absolute; pointer-events: none; z-index: 9999; }
+.dd-dragel > .dd-item .dd-handle { margin-top: 0; }
+.dd-dragel .dd-handle {
+    -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+            box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+}
 
-<p>Then activate with jQuery like so:</p>
+/**
+ * Nestable Extras
+ */
 
-<pre><code>$('.dd').nestable({ /* config options */ });
-</code></pre>
+.nestable-lists { display: block; clear: both; padding: 30px 0; width: 100%; border: 0; border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; }
 
-<h3>
-<a id="events" class="anchor" href="#events" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Events</h3>
+#nestable-menu { padding: 0; margin: 20px 0; }
 
-<p>The <code>change</code> event is fired when items are reordered.</p>
+#nestable-output,
+#nestable2-output { width: 100%; height: 7em; font-size: 0.75em; line-height: 1.333333em; font-family: Consolas, monospace; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
 
-<pre><code>$('.dd').on('change', function() {
-    /* on change event */
-});
-</code></pre>
+#nestable2 .dd-handle {
+    color: #fff;
+    border: 1px solid #999;
+    background: #bbb;
+    background: -webkit-linear-gradient(top, #bbb 0%, #999 100%);
+    background:    -moz-linear-gradient(top, #bbb 0%, #999 100%);
+    background:         linear-gradient(top, #bbb 0%, #999 100%);
+}
+#nestable2 .dd-handle:hover { background: #bbb; }
+#nestable2 .dd-item > button:before { color: #fff; }
 
-<h3>
-<a id="methods" class="anchor" href="#methods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Methods</h3>
+@media only screen and (min-width: 700px) {
 
-<p>You can get a serialised object with all <code>data-*</code> attributes for each item.</p>
+    .dd { float: left; width: 48%; }
+    .dd + .dd { margin-left: 2%; }
 
-<pre><code>$('.dd').nestable('serialize');
-</code></pre>
+}
 
-<p>The serialised JSON for the example above would be:</p>
+.dd-hover > .dd-handle { background: #2ea8e5 !important; }
 
-<pre><code>[{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]
-</code></pre>
+/**
+ * Nestable Draggable Handles
+ */
 
-<h3>
-<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h3>
+.dd3-content { display: block; height: 30px; margin: 5px 0; padding: 5px 10px 5px 40px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+    background: #fafafa;
+    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
+    box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.dd3-content:hover { color: #2ea8e5; background: #fff; }
 
-<p>You can change the follow options:</p>
+.dd-dragel > .dd3-item > .dd3-content { margin: 0; }
 
-<ul>
-<li>
-<code>maxDepth</code> number of levels an item can be nested (default <code>5</code>)</li>
-<li>
-<code>group</code> group ID to allow dragging between lists (default <code>0</code>)</li>
-</ul>
+.dd3-item > button { margin-left: 30px; }
 
-<p>These advanced config options are also available:</p>
+.dd3-handle { position: absolute; margin: 0; left: 0; top: 0; cursor: pointer; width: 30px; text-indent: 100%; white-space: nowrap; overflow: hidden;
+    border: 1px solid #aaa;
+    background: #ddd;
+    background: -webkit-linear-gradient(top, #ddd 0%, #bbb 100%);
+    background:    -moz-linear-gradient(top, #ddd 0%, #bbb 100%);
+    background:         linear-gradient(top, #ddd 0%, #bbb 100%);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.dd3-handle:before { content: '≡'; display: block; position: absolute; left: 0; top: 3px; width: 100%; text-align: center; text-indent: 0; color: #fff; font-size: 20px; font-weight: normal; }
+.dd3-handle:hover { background: #ddd; }
 
-<ul>
-<li>
-<code>click</code> Item click callback</li>
-<li>
-<code>listNodeName</code> The HTML element to create for lists (default <code>'ol'</code>)</li>
-<li>
-<code>itemNodeName</code> The HTML element to create for list items (default <code>'li'</code>)</li>
-<li>
-<code>rootClass</code> The class of the root element <code>.nestable()</code> was used on (default <code>'dd'</code>)</li>
-<li>
-<code>listClass</code> The class of all list elements (default <code>'dd-list'</code>)</li>
-<li>
-<code>itemClass</code> The class of all list item elements (default <code>'dd-item'</code>)</li>
-<li>
-<code>dragClass</code> The class applied to the list element that is being dragged (default <code>'dd-dragel'</code>)</li>
-<li>
-<code>handleClass</code> The class of the content element inside each list item (default <code>'dd-handle'</code>)</li>
-<li>
-<code>collapsedClass</code> The class applied to lists that have been collapsed (default <code>'dd-collapsed'</code>)</li>
-<li>
-<code>placeClass</code> The class of the placeholder element (default <code>'dd-placeholder'</code>)</li>
-<li>
-<code>emptyClass</code> The class used for empty list placeholder elements (default <code>'dd-empty'</code>)</li>
-<li>
-<code>expandBtnHTML</code> The HTML text used to generate a list item expand button (default <code>'&lt;button data-action="expand"&gt;Expand&gt;&lt;/button&gt;'</code>)</li>
-<li>
-<code>collapseBtnHTML</code> The HTML text used to generate a list item collapse button (default <code>'&lt;button data-action="collapse"&gt;Collapse&lt;/button&gt;'</code>)</li>
-</ul>
+    </style>
+</head>
+<body>
 
-<p><strong>Inspect the <a href="http://dbushell.github.com/Nestable/">Nestable Demo</a> for guidance.</strong></p>
+    <h1>Nestable</h1>
 
-<h2>
-<a id="change-log" class="anchor" href="#change-log" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Change Log</h2>
+    <p>Drag &amp; drop hierarchical list with mouse and touch compatibility (jQuery plugin)</p>
 
-<h3>
-<a id="15th-october-2012" class="anchor" href="#15th-october-2012" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>15th October 2012</h3>
+    <p><strong><a href="https://github.com/dbushell/Nestable">Code on GitHub</a></strong></p>
 
-<ul>
-<li>Merge for Zepto.js support</li>
-<li>Merge fix for remove/detach items</li>
-</ul>
+<p><strong>PLEASE NOTE: I cannot provide any support or guidance beyond this README. If this code helps you that's great but I have no plans to develop Nestable beyond this demo (it's not a final product and has limited functionality). I cannot reply to any requests for help.</strong></p>
 
-<h3>
-<a id="27th-june-2012" class="anchor" href="#27th-june-2012" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>27th June 2012</h3>
+    <menu id="nestable-menu">
+        <button type="button" data-action="expand-all">Expand All</button>
+        <button type="button" data-action="collapse-all">Collapse All</button>
+    </menu>
 
-<ul>
-<li>Added <code>maxDepth</code> option (default to 5)</li>
-<li>Added empty placeholder</li>
-<li>Updated CSS class structure with options for <code>listClass</code> and <code>itemClass</code>.</li>
-<li>Fixed to allow drag and drop between multiple Nestable instances (off by default).</li>
-<li>Added <code>group</code> option to enabled the above.</li>
-</ul>
+    <div class="cf nestable-lists">
 
-<hr>
+        <div class="dd" id="nestable">
+            <ol class="dd-list">
+                <li class="dd-item" data-id="1">
+                    <div class="dd-handle">Item 1</div>
+                </li>
+                <li class="dd-item" data-id="2">
+                    <div class="dd-handle">Item 2</div>
+                    <ol class="dd-list">
+                        <li class="dd-item" data-id="3"><div class="dd-handle">Item 3</div></li>
+                        <li class="dd-item" data-id="4"><div class="dd-handle">Item 4</div></li>
+                        <li class="dd-item" data-id="5">
+                            <div class="dd-handle">Item 5</div>
+                            <ol class="dd-list">
+                                <li class="dd-item" data-id="6"><div class="dd-handle">Item 6</div></li>
+                                <li class="dd-item" data-id="7"><div class="dd-handle">Item 7</div></li>
+                                <li class="dd-item" data-id="8"><div class="dd-handle">Item 8</div></li>
+                            </ol>
+                        </li>
+                        <li class="dd-item" data-id="9"><div class="dd-handle">Item 9</div></li>
+                        <li class="dd-item" data-id="10"><div class="dd-handle">Item 10</div></li>
+                    </ol>
+                </li>
+                <li class="dd-item" data-id="11">
+                    <div class="dd-handle">Item 11</div>
+                </li>
+                <li class="dd-item" data-id="12">
+                    <div class="dd-handle">Item 12</div>
+                </li>
+            </ol>
+        </div>
 
-<p>Author: David Bushell <a href="http://dbushell.com/">http://dbushell.com</a> <a href="http://twitter.com/dbushell/">@dbushell</a></p>
+        <div class="dd" id="nestable2">
+            <ol class="dd-list">
+                <li class="dd-item" data-id="13">
+                    <div class="dd-handle">Item 13</div>
+                </li>
+                <li class="dd-item" data-id="14">
+                    <div class="dd-handle">Item 14</div>
+                </li>
+                <li class="dd-item" data-id="15">
+                    <div class="dd-handle">Item 15</div>
+                    <ol class="dd-list">
+                        <li class="dd-item" data-id="16"><div class="dd-handle">Item 16</div></li>
+                        <li class="dd-item" data-id="17"><div class="dd-handle">Item 17</div></li>
+                        <li class="dd-item" data-id="18"><div class="dd-handle">Item 18</div></li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
 
-<p>Copyright © 2012 David Bushell | BSD &amp; MIT license</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/kamranzafar">kamranzafar</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+
+    <p><strong>Serialised Output (per list)</strong></p>
+
+    <textarea id="nestable-output"></textarea>
+    <textarea id="nestable2-output"></textarea>
+
+    <p>&nbsp;</p>
+
+    <div class="cf nestable-lists">
+
+    <p><strong>Draggable Handles</strong></p>
+
+    <p>If you're clever with your CSS and markup this can be achieved without any JavaScript changes.</p>
+
+        <div class="dd" id="nestable3">
+            <ol class="dd-list">
+                <li class="dd-item dd3-item" data-id="13">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 13</div>
+                </li>
+                <li class="dd-item dd3-item" data-id="14">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 14</div>
+                </li>
+                <li class="dd-item dd3-item" data-id="15">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 15</div>
+                    <ol class="dd-list">
+                        <li class="dd-item dd3-item" data-id="16">
+                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 16</div>
+                        </li>
+                        <li class="dd-item dd3-item" data-id="17">
+                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 17</div>
+                        </li>
+                        <li class="dd-item dd3-item" data-id="18">
+                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 18</div>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+
+    </div>
+
+    <p class="small">Copyright &copy; <a href="http://dbushell.com/">David Bushell</a> | Made for <a href="http://www.browserlondon.com/">Browser</a></p>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="jquery.nestable.js"></script>
+<script>
+
+$(document).ready(function()
+{
+
+    var updateOutput = function(e)
+    {
+        var list   = e.length ? e : $(e.target),
+            output = list.data('output');
+        if (window.JSON) {
+            output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+        } else {
+            output.val('JSON browser support required for this demo.');
+        }
+    };
+
+    // activate Nestable for list 1
+    $('#nestable').nestable({
+        group: 1,
+        click: function(item){
+          alert(item.find('.dd-handle:first').text() + " clicked");
+        }
+    })
+    .on('change', updateOutput);
+
+    // activate Nestable for list 2
+    $('#nestable2').nestable({
+        group: 1
+    })
+    .on('change', updateOutput);
+
+    // output initial serialised data
+    updateOutput($('#nestable').data('output', $('#nestable-output')));
+    updateOutput($('#nestable2').data('output', $('#nestable2-output')));
+
+    $('#nestable-menu').on('click', function(e)
+    {
+        var target = $(e.target),
+            action = target.data('action');
+        if (action === 'expand-all') {
+            $('.dd').nestable('expandAll');
+        }
+        if (action === 'collapse-all') {
+            $('.dd').nestable('collapseAll');
+        }
+    });
+
+    $('#nestable3').nestable();
+
+});
+</script>
+</body>
 </html>
