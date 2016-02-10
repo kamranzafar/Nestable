@@ -70,6 +70,7 @@ You can change the follow options:
 
 These advanced config options are also available:
 
+* `click` Item click callback
 * `listNodeName` The HTML element to create for lists (default `'ol'`)
 * `itemNodeName` The HTML element to create for list items (default `'li'`)
 * `rootClass` The class of the root element `.nestable()` was used on (default `'dd'`)

@@ -270,7 +270,10 @@ $(document).ready(function()
 
     // activate Nestable for list 1
     $('#nestable').nestable({
-        group: 1
+        group: 1,
+        click: function(item){
+          alert(item.find('.dd-handle:first').text() + " clicked");
+        }
     })
     .on('change', updateOutput);
 
